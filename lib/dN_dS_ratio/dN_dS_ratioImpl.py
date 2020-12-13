@@ -5,6 +5,7 @@ import os
 import uuid
 from dN_dS_ratio.Utils.DownloadUtils import DownloadUtils
 from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.WorkspaceClient import Workspace
 #END_HEADER
 
 
@@ -37,6 +38,8 @@ class dN_dS_ratio:
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
         self.du = DownloadUtils(self.callback_url)
+        self.config = config
+
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -57,12 +60,15 @@ class dN_dS_ratio:
         #self.SU.validate_params(params)
         
         workspace = params['workspace_name']
-        self.ws_url = self.config['workspace-url']
-        output_dir = os.path.join(self.scratch, str(uuid.uuid4()))
+        output_dir = os.path.join(self.shared_folder, str(uuid.uuid4()))
         os.mkdir(output_dir)
-
+        self.ws_url = self.config['workspace-url']
+        self.ws = Workspace(url=self.ws_url, token=ctx['token'])
 
         variation_ref = params['variation_ref']
+        variaiton = self.du.get_variation(variation_ref)
+        self.du.tabix_index(variation)
+
         variation_obj = self.ws.get_objects2({'objects': [{'ref': variation_ref}]})['data'][0]
 
 
@@ -70,14 +76,13 @@ class dN_dS_ratio:
         sample_set_ref = data['sample_set_ref']
 
         assembly_ref = variation_obj['data']['assembly_ref']
-        assembly_path = self.DU.get_assembly(assembly_ref, output_dir)
+        assembly_path = self.du.get_assembly(assembly_ref)
 
         gff_ref = params['genome_ref']
-        gff_path = self.DU.get_gff(gff_ref, output_dir)
+        gff_path = self.du.get_gff(gff_ref)
 
         report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': params['parameter_1']},
+        report_info = report.create({'report': {'objects_created':[]},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],

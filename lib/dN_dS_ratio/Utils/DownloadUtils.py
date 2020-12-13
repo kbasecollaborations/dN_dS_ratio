@@ -1,4 +1,5 @@
 import os
+import subprocess
 from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.VariationUtilClient import VariationUtil
 from installed_clients.GenomeFileUtilClient import GenomeFileUtil
@@ -48,3 +49,14 @@ class DownloadUtils:
           'ref': assembly_ref
         })
         return file['path']
+
+    def tabix_index(filename):
+        """Call tabix to create an index for a bgzip-compressed file."""
+        subprocess.Popen(['tabix', '-p', filename])
+
+    def tabix_query(filename, chrom, start, end):
+        """Call tabix and generate an array of strings for each line it returns."""
+        query = f'{chrom}:{start}-{end}'
+        process = subprocess.Popen(['tabix', '-f', filename, query], stdout=subprocess.PIPE)
+        for line in process.stdout:
+            yield line.decode('utf8').strip().split('\t')
