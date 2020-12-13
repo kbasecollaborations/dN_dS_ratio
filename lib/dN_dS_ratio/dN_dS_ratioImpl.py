@@ -66,7 +66,7 @@ class dN_dS_ratio:
         self.ws = Workspace(url=self.ws_url, token=ctx['token'])
 
         variation_ref = params['variation_ref']
-        variaiton = self.du.get_variation(variation_ref)
+        variation = self.du.get_variation(variation_ref)
         self.du.tabix_index(variation)
 
         variation_obj = self.ws.get_objects2({'objects': [{'ref': variation_ref}]})['data'][0]
