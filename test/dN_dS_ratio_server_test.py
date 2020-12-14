@@ -63,7 +63,8 @@ class dN_dS_ratioTest(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
-        ret = self.serviceImpl.run_dN_dS_ratio(self.ctx, {'workspace_name': 'pranjan77:narrative_1596711680507',
-                                                          'genome_ref':'52890/9/1',
-                                                          'variation_ref': '52890/26/1', 
+        ret = self.serviceImpl.run_dN_dS_ratio(self.ctx, {'workspace_name': 'man4ish_gupta:narrative_1607908922226',
+                                                          'genome_ref':'57755/6/1',
+                                                          'variation_ref':'57755/9/1', 
+                                                          'gene_id' : 'gene00001'
                                                          })

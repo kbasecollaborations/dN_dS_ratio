@@ -76,10 +76,39 @@ class dN_dS_ratio:
         sample_set_ref = data['sample_set_ref']
 
         assembly_ref = variation_obj['data']['assembly_ref']
-        assembly_path = self.du.get_assembly(assembly_ref)
+        assembly_path = self.du.get_assembly(assembly_ref, output_dir)
 
         gff_ref = params['genome_ref']
         gff_path = self.du.get_gff(gff_ref)
+
+        gene_id = params['gene_id']
+
+        gff_subsample_path = os.path.join(output_dir, "sub_sample.gff")
+        cmd = 'grep ID=' + gene_id + ' ' + gff_path + ' >> ' + gff_subsample_path
+        os.system(cmd)
+
+
+        with open(gff_subsample_path, 'r') as f:
+            line =  f.readline() 
+            rec  = line.split("\t")
+            chrom = rec[0]
+            start = rec[3]
+            end = rec[4]
+
+    
+        sub_sample_vcf = os.path.join(output_dir, "sub_sample.vcf")
+          
+        #temporary test function
+        index_cmd = "tabix -p vcf " + variation
+        os.system(index_cmd)
+
+        tabix_cmd = "tabix " + variation + " " + chrom + ":" +start + "-" + end + " > " + sub_sample_vcf
+        os.system(tabix_cmd)
+
+        #vcf_subsample = self.du.tabix_query(variation, chrom, start, end, output_dir) 
+        #print(vcf_subsample)
+
+        #end of test function
 
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[]},
