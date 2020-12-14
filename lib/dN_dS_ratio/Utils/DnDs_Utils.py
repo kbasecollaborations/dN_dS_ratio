@@ -3,26 +3,26 @@ import csv
 import os
 import re
 import json
-class parse_dataUtils:
+class DnDs_Utils:
 
     def get_codon(self):
         ''' readinfg codon json'''
 
-        with open('json_data/codon.json') as cf:
+        with open('/kb/module/data/json_data/codon.json') as cf:
             codon_data = json.load(cf)
         return codon_data
 
     def getmutation_table(self):
         '''reading mutation codon'''
 
-        with open('json_data/mutation_codon.json') as mcf:
+        with open('/kb/module/data/json_data/mutation_codon.json') as mcf:
             mutation_codon_data = json.load(mcf)
         return mutation_codon_data
 
     def get_all_possible_path(self):
         '''reading all possible path'''
 
-        with open('json_data/all_possible_path.json') as appf:
+        with open('/kb/module/data/json_data/all_possible_path.json') as appf:
             all_possible_path = json.load(appf)
         return all_possible_path
 
@@ -700,7 +700,7 @@ class parse_dataUtils:
 
 
 
-    def merge_files(self, codon_file, variant_file):
+    def merge_files(self, corrected_codon_file, codon_file, variant_file):
         pos_dict = {}
         merged_list = []
         with open(codon_file) as cdfile:
@@ -714,7 +714,7 @@ class parse_dataUtils:
                         pos_dict[pos] = line
         print(pos_dict)
 
-        with open("corrected_variant_info.tsv", 'w') as mfile:
+        with open(corrected_codon_file, 'w') as mfile:
             with open(variant_file) as varfile:
                 for line in varfile:
                     if (not line.startswith("#")):

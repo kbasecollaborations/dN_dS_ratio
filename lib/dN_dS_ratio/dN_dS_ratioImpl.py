@@ -4,6 +4,8 @@ import logging
 import os
 import uuid
 from dN_dS_ratio.Utils.DownloadUtils import DownloadUtils
+from dN_dS_ratio.Utils.DnDs_Utils import DnDs_Utils
+from dN_dS_ratio.Utils.htmlreportutils import htmlreportutils
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
 #END_HEADER
@@ -38,8 +40,11 @@ class dN_dS_ratio:
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
         self.du = DownloadUtils(self.callback_url)
+        self.pu = DnDs_Utils()
+        self.hu = htmlreportutils()
         self.config = config
 
+       
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -109,6 +114,50 @@ class dN_dS_ratio:
         #print(vcf_subsample)
 
         #end of test function
+
+        sequence =  self.pu.read_refseq(assembly_ref)
+        var_list = self.pu.read_vcf(variation, sequence)
+
+        print(var_list)
+
+        #if os.path.exists("variant_info.tsv"):
+        #   os.remove("variant_info.tsv")
+
+        var_file = os.path.join(output_dir, "variant_info.tsv")
+
+        with open(var_file, 'w') as variant_tmp_file:
+           var_temp = csv.writer(variant_tmp_file, delimiter='\t')
+           var_temp.writerow(["#chr", "ref", "alt", "pos", "codon number", "pos in codon", "codon start", "codon", "mutation type", "coverage"])
+           for var_gene_list in var_list:
+              var_temp.writerow(var_gene_list)
+
+        gff_data = self.pu.read_gff_file(gff_path)
+
+
+
+        codon_list = self.pu.get_triplets(sequence, gff_data)
+        #print(codon_list)
+
+        codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
+        corrected_codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
+       
+        #if os.path.exists("codon_results_temp.tsv"):
+        #   os.remove("codon_results_temp.tsv")
+        with open(codon_result_file, 'w') as cdr_tmp_file:
+            cdr_temp = csv.writer(cdr_tmp_file, delimiter='\t')
+            cdr_temp.writerow(["#chr", "gene", "codon", "codon start", "codon end", "codon positions", "codon number", "N", "S"])
+            for gene_codon_list in codon_list:
+                for codon in gene_codon_list:
+                    cdr_temp.writerow(codon)
+
+        merged_list = self.pu.merge_files(corrected_codon_result_file, codon_result_file, var_file)
+        all_possible_codon = self.pu.get_all_possible_codon(merged_list)  # generating all possible codon
+
+        self.pu.generate_statistics(corrected_codon_result_file, codon_result_file, all_possible_codon)
+
+        ############# html reporting ############################################################3 
+        workspace = params['workspace_name']
+        output = self.hu.create_html_report(self.callback_url, output_dir, workspace)
 
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[]},
