@@ -3,6 +3,8 @@ import csv
 import os
 import re
 import json
+import gzip
+
 class DnDs_Utils:
 
     def get_codon(self):
@@ -39,8 +41,9 @@ class DnDs_Utils:
 
 
 
-        with open("dnds_statistics.tsv", "w") as stat_file:
+        with open("/kb/module/work/tmp/dnds_statistics.tsv", "w") as stat_file:
             for cdn in codon_list:
+                print(cdn)
                 total_Nsites = total_Nsites + float(cdn[0])
                 total_Ssites = total_Ssites + float(cdn[1])
                 total_Ndiffs = total_Ndiffs + float(cdn[2])
@@ -316,7 +319,7 @@ class DnDs_Utils:
     def getmutation_table(self):
         '''reading mutation codon'''
 
-        with open('json_data/mutation_codon.json') as mcf:
+        with open('/kb/module/data/json_data/mutation_codon.json') as mcf:
             mutation_codon_data = json.load(mcf)
         return mutation_codon_data
 
@@ -567,11 +570,12 @@ class DnDs_Utils:
 
     def read_vcf(self, vcf_file, seq):
         '''parse vcf file'''
-
+        
         varlist = []
-        with open(vcf_file) as fp:
-            line = fp.readline()
-            while line:
+        with open(vcf_file, 'r') as fp:
+            #line = fp.readline()
+            for line in fp:
+                print(line)
                 if not line.startswith("#"):
                     print(line)
                     var = []
@@ -682,7 +686,7 @@ class DnDs_Utils:
                     coverage[str(rec[4])] = int((sample[AD_index]).split(",")[1])  # for single allele
                     var.append(coverage)
                     varlist.append(var)
-                line = fp.readline()
+                #line = fp.readline()
         return varlist
 
     def read_refseq(self, fasta_file):

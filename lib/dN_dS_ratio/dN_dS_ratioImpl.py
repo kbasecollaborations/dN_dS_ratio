@@ -2,6 +2,7 @@
 #BEGIN_HEADER
 import logging
 import os
+import csv
 import uuid
 from dN_dS_ratio.Utils.DownloadUtils import DownloadUtils
 from dN_dS_ratio.Utils.DnDs_Utils import DnDs_Utils
@@ -69,7 +70,9 @@ class dN_dS_ratio:
         os.mkdir(output_dir)
         self.ws_url = self.config['workspace-url']
         self.ws = Workspace(url=self.ws_url, token=ctx['token'])
+        
 
+        '''
         variation_ref = params['variation_ref']
         variation = self.du.get_variation(variation_ref)
         self.du.tabix_index(variation)
@@ -114,12 +117,21 @@ class dN_dS_ratio:
         #print(vcf_subsample)
 
         #end of test function
+        
+        ''' 
+        outout_dir = '/kb/module/work/09f432d2-9e76-4ad1-b78a-8fa25693777c'
+        assembly_path = outout_dir + '/ref_genome.fa'
+        variation = outout_dir + '/sub_sample.vcf'
+        gff_path = outout_dir + '/sub_sample.gff'
+        
 
-        sequence =  self.pu.read_refseq(assembly_ref)
+        sequence =  self.pu.read_refseq(assembly_path)
+        print(sequence)
+
         var_list = self.pu.read_vcf(variation, sequence)
 
         print(var_list)
-
+        
         #if os.path.exists("variant_info.tsv"):
         #   os.remove("variant_info.tsv")
 
@@ -140,7 +152,7 @@ class dN_dS_ratio:
 
         codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
         corrected_codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
-       
+        
         #if os.path.exists("codon_results_temp.tsv"):
         #   os.remove("codon_results_temp.tsv")
         with open(codon_result_file, 'w') as cdr_tmp_file:
