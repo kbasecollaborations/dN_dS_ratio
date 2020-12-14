@@ -28,7 +28,7 @@ class DnDs_Utils:
             all_possible_path = json.load(appf)
         return all_possible_path
 
-    def calculate_dn_ds_ratio(self, codon_list):
+    def calculate_dn_ds_ratio(self, codon_list, output_dir):
         '''
         :param codon_list: list of codons with Ndiffs, Sdiffs, Nsites and Ssites values
         :return: ratio of dn and ds
@@ -41,7 +41,7 @@ class DnDs_Utils:
 
 
 
-        with open("/kb/module/work/tmp/dnds_statistics.tsv", "w") as stat_file:
+        with open(os.path.join(output_dir, "dnds_statistics.tsv"), "w") as stat_file:
             for cdn in codon_list:
                 print(cdn)
                 total_Nsites = total_Nsites + float(cdn[0])
@@ -736,7 +736,7 @@ class DnDs_Utils:
                     #print(var_pos)
         return  merged_list
 
-    def generate_statistics(self, varinat_info_file, codon_info_file, all_possible_codon):
+    def generate_statistics(self, varinat_info_file, codon_info_file, all_possible_codon, output_dir):
         '''
         :param varinat_info_file:
         :param codon_info_file:
@@ -803,5 +803,5 @@ class DnDs_Utils:
                     pn_ps_lst.append([Nsites, Ssites, 0, 0])
 
             #exit(pn_ps_lst)
-            dn_ds_ratio = self.calculate_dn_ds_ratio(pn_ps_lst)
+            dn_ds_ratio = self.calculate_dn_ds_ratio(pn_ps_lst, output_dir)
             print("dn/ds ratio = " + str(dn_ds_ratio))  # need to check with spreasheet

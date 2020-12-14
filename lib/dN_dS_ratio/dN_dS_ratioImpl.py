@@ -148,10 +148,11 @@ class dN_dS_ratio:
 
 
         codon_list = self.pu.get_triplets(sequence, gff_data)
-        #print(codon_list)
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        #exit(codon_list)
 
         codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
-        corrected_codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
+        corrected_codon_result_file =  os.path.join(output_dir, "corrected_variant_info.tsv")
         
         #if os.path.exists("codon_results_temp.tsv"):
         #   os.remove("codon_results_temp.tsv")
@@ -165,19 +166,19 @@ class dN_dS_ratio:
         merged_list = self.pu.merge_files(corrected_codon_result_file, codon_result_file, var_file)
         all_possible_codon = self.pu.get_all_possible_codon(merged_list)  # generating all possible codon
 
-        self.pu.generate_statistics(corrected_codon_result_file, codon_result_file, all_possible_codon)
+        self.pu.generate_statistics(corrected_codon_result_file, codon_result_file, all_possible_codon, output_dir)
 
         ############# html reporting ############################################################3 
         workspace = params['workspace_name']
         output = self.hu.create_html_report(self.callback_url, output_dir, workspace)
 
-        report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[]},
-                                                'workspace_name': params['workspace_name']})
-        output = {
-            'report_name': report_info['name'],
-            'report_ref': report_info['ref'],
-        }
+        #report = KBaseReport(self.callback_url)
+        #report_info = report.create({'report': {'objects_created':[]},
+        #                                        'workspace_name': params['workspace_name']})
+        #output = {
+        #    'report_name': report_info['name'],
+        #    'report_ref': report_info['ref'],
+        #}
         #END run_dN_dS_ratio
 
         # At some point might do deeper type checking...
