@@ -7,6 +7,7 @@ import uuid
 from dN_dS_ratio.Utils.DownloadUtils import DownloadUtils
 from dN_dS_ratio.Utils.DnDs_Utils import DnDs_Utils
 from dN_dS_ratio.Utils.htmlreportutils import htmlreportutils
+from dN_dS_ratio.Utils.Data_Process_Utils import Data_Process_Utils
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
 #END_HEADER
@@ -42,6 +43,7 @@ class dN_dS_ratio:
         self.shared_folder = config['scratch']
         self.du = DownloadUtils(self.callback_url)
         self.pu = DnDs_Utils()
+        self.dpu = Data_Process_Utils()
         self.hu = htmlreportutils()
         self.config = config
 
@@ -72,7 +74,7 @@ class dN_dS_ratio:
         self.ws = Workspace(url=self.ws_url, token=ctx['token'])
         
 
-        '''
+        
         variation_ref = params['variation_ref']
         variation = self.du.get_variation(variation_ref)
         self.du.tabix_index(variation)
@@ -85,16 +87,18 @@ class dN_dS_ratio:
 
         assembly_ref = variation_obj['data']['assembly_ref']
         assembly_path = self.du.get_assembly(assembly_ref, output_dir)
-
+        
         gff_ref = params['genome_ref']
         gff_path = self.du.get_gff(gff_ref)
 
         gene_id = params['gene_id']
 
         gff_subsample_path = os.path.join(output_dir, "sub_sample.gff")
-        cmd = 'grep ID=' + gene_id + ' ' + gff_path + ' >> ' + gff_subsample_path
-        os.system(cmd)
+        #cmd = 'grep ID=' + gene_id + ' ' + gff_path + ' >> ' + gff_subsample_path
+        #os.system(cmd)
 
+        self.dpu.filter_gff(gene_id, gff_path, gff_subsample_path)
+        
 
         with open(gff_subsample_path, 'r') as f:
             line =  f.readline() 
@@ -107,22 +111,27 @@ class dN_dS_ratio:
         sub_sample_vcf = os.path.join(output_dir, "sub_sample.vcf")
           
         #temporary test function
-        index_cmd = "tabix -p vcf " + variation
-        os.system(index_cmd)
+        #index_cmd = "tabix -p vcf " + variation
+        #os.system(index_cmd)
 
-        tabix_cmd = "tabix " + variation + " " + chrom + ":" +start + "-" + end + " > " + sub_sample_vcf
-        os.system(tabix_cmd)
+        self.dpu.index_vcf_file(variation)
+
+        self.dpu.tabix_query(variation, chrom, start, end, sub_sample_vcf)
+      
+
+        #tabix_cmd = "tabix " + variation + " " + chrom + ":" +start + "-" + end + " > " + sub_sample_vcf
+        #os.system(tabix_cmd)
 
         #vcf_subsample = self.du.tabix_query(variation, chrom, start, end, output_dir) 
         #print(vcf_subsample)
 
         #end of test function
         
-        ''' 
-        outout_dir = '/kb/module/work/09f432d2-9e76-4ad1-b78a-8fa25693777c'
-        assembly_path = outout_dir + '/ref_genome.fa'
-        variation = outout_dir + '/sub_sample.vcf'
-        gff_path = outout_dir + '/sub_sample.gff'
+         
+        #outout_dir = '/kb/module/work/09f432d2-9e76-4ad1-b78a-8fa25693777c'
+        assembly_path = output_dir + '/ref_genome.fa'
+        variation = output_dir + '/sub_sample.vcf'
+        gff_path = output_dir + '/sub_sample.gff'
         
 
         sequence =  self.pu.read_refseq(assembly_path)

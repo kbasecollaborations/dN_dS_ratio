@@ -1,4 +1,5 @@
 import uuid
+import os
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.KBaseReportClient import KBaseReport
 
@@ -14,7 +15,7 @@ class htmlreportutils:
         '''
 
         output = "<html><head></head><body>"
-        output += "<h2>Vein Diagram</h2>"
+        output += "<h2>Dn/Ds Report</h2>"
         with open(os.path.join(output_dir, "dnds_statistics.tsv"), 'r') as fp:
             for line in fp:
                output += "<br> " + line + " </br>" 
