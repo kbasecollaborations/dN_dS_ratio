@@ -77,7 +77,7 @@ class dN_dS_ratio:
         
         variation_ref = params['variation_ref']
         variation = self.du.get_variation(variation_ref)
-        self.du.tabix_index(variation)
+        #self.du.tabix_index(variation)
 
         variation_obj = self.ws.get_objects2({'objects': [{'ref': variation_ref}]})['data'][0]
 

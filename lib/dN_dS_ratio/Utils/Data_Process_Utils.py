@@ -51,12 +51,12 @@ class Data_Process_Utils:
         #return bzfilepath
 
     def validate_params(self, params):
-        if 'assembly_or_genome_reff' not in params:
-            raise ValueError('required assembly_or_genome_ref field was not defined')
-        elif 'variation_object_name' not in params:
-            raise ValueError('required variation_object_name field was not defined')
+        if 'genome_ref' not in params:
+            raise ValueError('required genome_ref field was not defined')
+        elif 'variation_ref' not in params:
+            raise ValueError('required variation_ref field was not defined')
         elif 'gene_id' not in params:
-            raise ValueError('required indel_filter field was not defined') 
+            raise ValueError('required gene_id field was not defined') 
 
     def filter_gff(self, gene_id, gff_path, gff_subsample_path):
         command = ['grep']

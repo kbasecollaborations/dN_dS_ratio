@@ -11,6 +11,13 @@ module dN_dS_ratio {
     /*
         This example function accepts any number of parameters and returns results in a KBaseReport
     */
-    funcdef run_dN_dS_ratio(mapping<string,UnspecifiedObject> params) returns (ReportResults output) authentication required;
+
+    typedef structure {
+        string workspace_name;
+        string variation_ref;
+        string genome_ref;
+        string gene_id;
+    } Inparams;
+    funcdef run_dN_dS_ratio(Inparams params) returns (ReportResults output) authentication required;
 
 };

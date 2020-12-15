@@ -42,18 +42,6 @@
           "text_options": {
           "valid_ws_types": [ ]
           }
-        },
-        {
-            "id": "output_object_name",
-            "optional": false,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types" : [ "KBaseGwasData.GwasVariations" ],
-                "is_output_name" : true
-            }
         }
     ],
     "behavior": {
@@ -78,10 +66,6 @@
                     "input_parameter": "gene_id",
                     "target_property": "gene_id",
                     "target_type_transform": "resolved-ref"
-                },
-                {
-                    "input_parameter": "output_object_name",
-                    "target_property": "output_object_name"
                 }
             ],
             "output_mapping": [

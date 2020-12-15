@@ -53,17 +53,3 @@ class DownloadUtils:
           'filename': os.path.join(output_dir, "ref_genome.fa")
         })
         return file['path']
-
-    def tabix_index(self, filename):
-        """Call tabix to create an index for a bgzip-compressed file."""
-        subprocess.Popen(['tabix', '-p', filename])
-
-    def tabix_query(self, filename, chrom, start, end, output_dir):
-        """Call tabix and generate an array of strings for each line it returns."""
-        query = f'{chrom}:{start}-{end}'
-        process = subprocess.Popen(['tabix', '-f', filename, query], stdout=subprocess.PIPE)
-
-        with open(os.path.join(output_dir, "sub_sample.vcf"), "w") as fw:
-            for line in process.stdout:
-                fw.write(line + "\n")
-            #yield line.decode('utf8').strip().split('\t')

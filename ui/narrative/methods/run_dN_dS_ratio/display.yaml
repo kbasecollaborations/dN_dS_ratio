@@ -39,11 +39,5 @@ parameters :
             Gene Id
         short-hint : |
             Gene Id parameter
-    output_object_name :
-        ui-name : |
-            output object
-        short-hint : |
-            output object parametrs
-         
 description : |
     <p> </p>
