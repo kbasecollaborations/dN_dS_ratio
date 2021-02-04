@@ -19,6 +19,7 @@ class htmlreportutils:
         with open(os.path.join(output_dir, "dnds_statistics.tsv"), 'r') as fp:
             for line in fp:
                output += "<br> " + line + " </br>" 
+        #output += "<img src=venn_diagram.png width=\"800\" height=\"600\">"
         output += "</body></html>"
         return output
 

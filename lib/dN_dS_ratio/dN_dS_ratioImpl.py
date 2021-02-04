@@ -110,25 +110,14 @@ class dN_dS_ratio:
     
         sub_sample_vcf = os.path.join(output_dir, "sub_sample.vcf")
           
-        #temporary test function
-        #index_cmd = "tabix -p vcf " + variation
-        #os.system(index_cmd)
 
         self.dpu.index_vcf_file(variation)
 
         self.dpu.tabix_query(variation, chrom, start, end, sub_sample_vcf)
       
 
-        #tabix_cmd = "tabix " + variation + " " + chrom + ":" +start + "-" + end + " > " + sub_sample_vcf
-        #os.system(tabix_cmd)
 
-        #vcf_subsample = self.du.tabix_query(variation, chrom, start, end, output_dir) 
-        #print(vcf_subsample)
-
-        #end of test function
-        
          
-        #outout_dir = '/kb/module/work/09f432d2-9e76-4ad1-b78a-8fa25693777c'
         assembly_path = output_dir + '/ref_genome.fa'
         variation = output_dir + '/sub_sample.vcf'
         gff_path = output_dir + '/sub_sample.gff'
@@ -141,8 +130,6 @@ class dN_dS_ratio:
 
         print(var_list)
         
-        #if os.path.exists("variant_info.tsv"):
-        #   os.remove("variant_info.tsv")
 
         var_file = os.path.join(output_dir, "variant_info.tsv")
 
@@ -163,8 +150,6 @@ class dN_dS_ratio:
         codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
         corrected_codon_result_file =  os.path.join(output_dir, "corrected_variant_info.tsv")
         
-        #if os.path.exists("codon_results_temp.tsv"):
-        #   os.remove("codon_results_temp.tsv")
         with open(codon_result_file, 'w') as cdr_tmp_file:
             cdr_temp = csv.writer(cdr_tmp_file, delimiter='\t')
             cdr_temp.writerow(["#chr", "gene", "codon", "codon start", "codon end", "codon positions", "codon number", "N", "S"])
@@ -181,13 +166,6 @@ class dN_dS_ratio:
         workspace = params['workspace_name']
         output = self.hu.create_html_report(self.callback_url, output_dir, workspace)
 
-        #report = KBaseReport(self.callback_url)
-        #report_info = report.create({'report': {'objects_created':[]},
-        #                                        'workspace_name': params['workspace_name']})
-        #output = {
-        #    'report_name': report_info['name'],
-        #    'report_ref': report_info['ref'],
-        #}
         #END run_dN_dS_ratio
 
         # At some point might do deeper type checking...

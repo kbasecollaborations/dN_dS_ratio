@@ -406,14 +406,6 @@ class DnDs_Utils:
             return None
 
     def get_codon(self, chr, seq, gene_id, diffmap):
-        '''
-        :param chr:
-        :param seq:
-        :param gene_id:
-        :param diffmap:
-        :return: codon list
-        '''
-
         codon_list = []
         mutation_codon_data = self.getmutation_table()
 
@@ -459,13 +451,7 @@ class DnDs_Utils:
         return codon_list
 
     def get_triplets(self, seq, chr_dict):
-        '''
-        generate triplets from ref seq
-        :param seq:
-        :param chr_dict:
-        :return: codon list
-        '''
-
+        '''generate triplets from ref seq'''
         codon_list = []
         for chr in chr_dict.keys():
             posmap = {}
@@ -528,12 +514,7 @@ class DnDs_Utils:
         return codon_list
 
     def read_gff_file(self, gff_file):
-        '''
-        read gtf file
-        :param gff_file:
-        :return:
-        '''
-
+        '''read gtf file'''
         chr_dict = {}
 
         with open(gff_file) as fp:
@@ -576,34 +557,19 @@ class DnDs_Utils:
         return chr_dict
 
     def filter_ann(self, ann_field):
-        '''
-        :param ann_field:
-        :return:
-        '''
-
         if '>' in ann_field:
             return True
         else:
             return False
 
     def filter_codon_change(self, ann_field):
-        '''
-        :param ann_field:
-        :return:
-        '''
-
         if 'p.' in ann_field:
             return True
         else:
             return False
 
     def read_vcf(self, vcf_file, seq):
-        '''
-        parse vcf file
-        :param vcf_file:
-        :param seq:
-        :return:
-        '''
+        '''parse vcf file'''
         
         varlist = []
         with open(vcf_file, 'r') as fp:
@@ -739,13 +705,6 @@ class DnDs_Utils:
 
 
     def merge_files(self, corrected_codon_file, codon_file, variant_file):
-        '''
-        :param corrected_codon_file:
-        :param codon_file:
-        :param variant_file:
-        :return:
-        '''
-
         pos_dict = {}
         merged_list = []
         with open(codon_file) as cdfile:

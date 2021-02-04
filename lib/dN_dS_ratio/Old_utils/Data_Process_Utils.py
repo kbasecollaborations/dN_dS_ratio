@@ -39,30 +39,18 @@ class Data_Process_Utils:
         return "success"
 
     def bgzip_vcf_file(self, filepath):
-        '''
-        :param filepath:
-        :return: bgzipped file path
-        '''
-
         bzfilepath = filepath + ".gz"
         command = ["bgzip", filepath]
         self.run_cmd(command)
         return bzfilepath
 
     def index_vcf_file(self, filepath):
-        '''
-        :param filepath:
-        :return:
-        '''
+        #bzfilepath = self.bgzip_vcf_file(filepath)
         command  = ["tabix", "-p", "vcf", filepath]
         self.run_cmd(command)
+        #return bzfilepath
 
     def validate_params(self, params):
-        '''
-        :param params:
-        :return:
-        '''
-
         if 'genome_ref' not in params:
             raise ValueError('required genome_ref field was not defined')
         elif 'variation_ref' not in params:
@@ -71,13 +59,6 @@ class Data_Process_Utils:
             raise ValueError('required gene_id field was not defined') 
 
     def filter_gff(self, gene_id, gff_path, gff_subsample_path):
-        '''
-        :param gene_id:
-        :param gff_path:
-        :param gff_subsample_path:
-        :return:
-        '''
-
         command = ['grep']
         command.append("\'ID=" + gene_id +"\'")
         command.append(gff_path)
@@ -85,14 +66,6 @@ class Data_Process_Utils:
         self.run_cmd(command)
 
     def tabix_query(self, filepath, chrom, start, end, subsample_vcf):
-        '''
-        :param filepath:
-        :param chrom:
-        :param start:
-        :param end:
-        :param subsample_vcf:
-        :return:
-        '''
         command = ['tabix']
         command.append(filepath)
         command.append(chrom + ":" + start + "-" + end)

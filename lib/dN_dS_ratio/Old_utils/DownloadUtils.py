@@ -44,21 +44,10 @@ class DownloadUtils:
         return filepath
 
     def get_gff(self, genome_ref):
-        '''
-        :param genome_ref:
-        :return: gff file path
-        '''
-
         file = self.gfu.genome_to_gff({'genome_ref': genome_ref})
         return file['file_path']
 
     def get_assembly(self, assembly_ref, output_dir):
-        '''
-        :param assembly_ref:
-        :param output_dir:
-        :return: assembly file path
-        '''
-
         file = self.au.get_assembly_as_fasta({
           'ref': assembly_ref, 
           'filename': os.path.join(output_dir, "ref_genome.fa")
