@@ -47,7 +47,6 @@ class dN_dS_ratio:
         self.hu = htmlreportutils()
         self.config = config
 
-       
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -55,17 +54,17 @@ class dN_dS_ratio:
 
 
     def run_dN_dS_ratio(self, ctx, params):
-        """
+        '''
         This example function accepts any number of parameters and returns results in a KBaseReport
         :param params: instance of mapping from String to unspecified object
         :returns: instance of type "ReportResults" -> structure: parameter
            "report_name" of String, parameter "report_ref" of String
-        """
+        '''
         # ctx is the context object
         # return variables are: output
         #BEGIN run_dN_dS_ratio
         print(params)
-        #self.SU.validate_params(params)
+        self.dpu.validate_params(params)
         
         workspace = params['workspace_name']
         output_dir = os.path.join(self.shared_folder, str(uuid.uuid4()))
@@ -74,13 +73,10 @@ class dN_dS_ratio:
         self.ws = Workspace(url=self.ws_url, token=ctx['token'])
         
 
-        
         variation_ref = params['variation_ref']
         variation = self.du.get_variation(variation_ref)
         #self.du.tabix_index(variation)
-
         variation_obj = self.ws.get_objects2({'objects': [{'ref': variation_ref}]})['data'][0]
-
 
         data = self.ws.get_objects2( {'objects':[{"ref":variation_ref, 'included': ['/sample_set_ref']}]})['data'][0]['data']
         sample_set_ref = data['sample_set_ref']
@@ -94,11 +90,8 @@ class dN_dS_ratio:
         gene_id = params['gene_id']
 
         gff_subsample_path = os.path.join(output_dir, "sub_sample.gff")
-        #cmd = 'grep ID=' + gene_id + ' ' + gff_path + ' >> ' + gff_subsample_path
-        #os.system(cmd)
 
         self.dpu.filter_gff(gene_id, gff_path, gff_subsample_path)
-        
 
         with open(gff_subsample_path, 'r') as f:
             line =  f.readline() 
@@ -112,12 +105,8 @@ class dN_dS_ratio:
           
 
         self.dpu.index_vcf_file(variation)
-
         self.dpu.tabix_query(variation, chrom, start, end, sub_sample_vcf)
-      
 
-
-         
         assembly_path = output_dir + '/ref_genome.fa'
         variation = output_dir + '/sub_sample.vcf'
         gff_path = output_dir + '/sub_sample.gff'
@@ -127,7 +116,6 @@ class dN_dS_ratio:
         print(sequence)
 
         var_list = self.pu.read_vcf(variation, sequence)
-
         print(var_list)
         
 
@@ -141,11 +129,7 @@ class dN_dS_ratio:
 
         gff_data = self.pu.read_gff_file(gff_path)
 
-
-
         codon_list = self.pu.get_triplets(sequence, gff_data)
-        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-        #exit(codon_list)
 
         codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
         corrected_codon_result_file =  os.path.join(output_dir, "corrected_variant_info.tsv")

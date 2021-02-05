@@ -103,7 +103,11 @@ class DnDs_Utils:
         return Ndiffs
 
     def get_Sites_ref(self, triplet):
-        '''Calculate Nsites_ref and Ssites_ref from mutation table'''
+        '''
+        Calculate Nsites_ref and Ssites_ref from mutation table
+        :param triplet:
+        :return:
+        '''
 
         N = 0
         S = 0
@@ -164,7 +168,13 @@ class DnDs_Utils:
         return {"Nsites": Nsites, "Ssites": Ssites}
 
     def get_allele_freq(self, pos, alleles):
-        ''' get allele frquency for given pos'''
+        '''
+        get allele frquency for given pos
+        :param pos:
+        :param alleles:
+        :return:
+        '''
+
         for allele in alleles:
             if pos in allele.keys():
                 alt_frq = allele[pos][1]['alt']['freq']
@@ -179,7 +189,12 @@ class DnDs_Utils:
         return allele_dict
 
     def possible_codon(self, key, alleles):
-        '''generate a list of possible codon with given position and allele list'''
+        '''
+        generate a list of possible codon with given position and allele list
+        :param key:
+        :param alleles:
+        :return:
+        '''
 
         codon = {}
 
@@ -271,8 +286,12 @@ class DnDs_Utils:
         return possible_codon_dict
 
     def get_all_possible_codon(self, codon_list):
+        '''
+        get all possible codon with given allele
+        :param codon_list:
+        :return:
+        '''
 
-        '''get all possible codon with given allele'''
 
         cdn_dict = {}
         for cdn_lst in codon_list:
@@ -317,7 +336,10 @@ class DnDs_Utils:
         return cdn_dict
 
     def getmutation_table(self):
-        '''reading mutation codon'''
+        '''
+        reading mutation codon
+        :return:
+        '''
 
         with open('/kb/module/data/json_data/mutation_codon.json') as mcf:
             mutation_codon_data = json.load(mcf)
@@ -325,7 +347,6 @@ class DnDs_Utils:
 
     def reverse_complement(self, cds_seq):
         '''
-
         :param cds_seq:
         :return:
         '''
@@ -336,6 +357,10 @@ class DnDs_Utils:
 
 
     def split_and_check(self, annot):
+        '''
+        :param annot:
+        :return:
+        '''
         ANNOT = {
             "synonymous_variant": 1,
             "missense_variant": 1,
@@ -441,8 +466,6 @@ class DnDs_Utils:
             S = S + (S1 + S2 + S3)
 
             codon.append(seq[start:end])
-            #cds_start = start +1
-            #cds_end =  end
             codon.append(diffmap[start])
             codon.append(diffmap[start + 2])
 
@@ -477,41 +500,24 @@ class DnDs_Utils:
                 diffmap = {}
                 cds_global_pos_map = {}
                 for gene_id, cds_dict in genes.items():
-
-
                     c = 1
-
-                    #min = cds_list[0][0]
-                    #print("min = " + min)
                     cds_list = cds_dict['cds_coordinates']
                     orientation = cds_dict['orient']
                     for cds_coordinates in cds_list:
 
                         if(c > 1):
-                            #print(cds_coordinates)
-                            #print(c)
-                            #print(cds_list[c-1])
-                            #print(cds_list[c-2])
                             diff  = int((cds_list[c-1])[0]) - int((cds_list[c-2])[1]) -1
 
-                            #print(diff)
                             gdiff = gdiff + diff
-                            #print(gdiff)
-                            #print(">>>>>>>")
                         min = int(cds_coordinates[0])
                         max = int(cds_coordinates[1])
 
                         for i in range(min, max+1):
-                            #posmap[i] = i
                             diffmap[cds_pos] = gdiff
-                            #
                             cds_pos = cds_pos + 1
                         c = c + 1
 
                         trascipt_seq  = trascipt_seq  + seq[min-1:max]
-                    #print(gene_id, trascipt_seq)
-                    #print(posmap)
-                    #print(diffmap)
                     if(orientation == '-'):
                         trascipt_seq = self.reverse_complement(trascipt_seq)
                     #TODO: if orientation is '-' , reverse transcribe the sequence(trascipt_seq)
@@ -520,10 +526,8 @@ class DnDs_Utils:
 
                     count = 0
                     for key in diffmap.keys():
-                        #print(str(key-fkey ) + "\t" + str(diffmap[key] + fkey + count))
                         cds_global_pos_map[key-fkey ] = diffmap[key] + fkey + count
                         count = count + 1
-                    #print(cds_global_pos_map)
                     codon_list.append(self.get_codon(chr, trascipt_seq, gene_id, cds_global_pos_map))
         return codon_list
 
@@ -681,18 +685,7 @@ class DnDs_Utils:
                         mutation_field += variation
                         print(variation)
 
-                    #var.append(pos_in_codon)  # get from snpeff results
-
                     print(mutation_field)
-
-                    '''
-                    codon_number = 0
-                    for mutation in mut_filed:
-                        codon_number = mutation[5:6]
-                        #print(mutation)
-
-                    var.append(codon_number)
-                    '''
 
                     mod = int(pos_in_codon) % 3
                     quotient = int(pos_in_codon) // 3
@@ -704,13 +697,10 @@ class DnDs_Utils:
                     codon = seq[codon_start - 1:codon_start + 2]
                     if (mod == 0):
                         mod = 3
-                    #var.append(mod)
-                    #var.append(','.join(codon_start_pos_list))
                     var.append(codon)  # get from snpeff results
 
                     var_class = annotation.split("|")[1]
                     var.append(','.join(mutation_type_list))
-                    #var.append(var_class)  # get from snpeff results
                     format = (rec[8]).split(":")
                     DP_index = format.index("DP")
                     AD_index = format.index("AD")
@@ -720,7 +710,6 @@ class DnDs_Utils:
                     coverage[str(rec[4])] = int((sample[AD_index]).split(",")[1])  # for single allele
                     var.append(coverage)
                     varlist.append(var)
-                #line = fp.readline()
         return varlist
 
     def read_refseq(self, fasta_file):
@@ -802,7 +791,6 @@ class DnDs_Utils:
         with open(codon_info_file, 'r') as cdr_file:
             pn_ps_lst = []
 
-
             for line in cdr_file:
                 if (line.startswith("#")):
                     continue
@@ -843,6 +831,5 @@ class DnDs_Utils:
                     Ssites = cd_list[8]
                     pn_ps_lst.append([Nsites, Ssites, 0, 0])
 
-            #exit(pn_ps_lst)
             dn_ds_ratio = self.calculate_dn_ds_ratio(pn_ps_lst, output_dir)
             print("dn/ds ratio = " + str(dn_ds_ratio))  # need to check with spreasheet
