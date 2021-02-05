@@ -46,7 +46,6 @@ class dN_dS_ratio:
         self.dpu = Data_Process_Utils()
         self.hu = htmlreportutils()
         self.config = config
-
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -83,14 +82,10 @@ class dN_dS_ratio:
 
         assembly_ref = variation_obj['data']['assembly_ref']
         assembly_path = self.du.get_assembly(assembly_ref, output_dir)
-        
         gff_ref = params['genome_ref']
         gff_path = self.du.get_gff(gff_ref)
-
         gene_id = params['gene_id']
-
         gff_subsample_path = os.path.join(output_dir, "sub_sample.gff")
-
         self.dpu.filter_gff(gene_id, gff_path, gff_subsample_path)
 
         with open(gff_subsample_path, 'r') as f:
@@ -102,8 +97,6 @@ class dN_dS_ratio:
 
     
         sub_sample_vcf = os.path.join(output_dir, "sub_sample.vcf")
-          
-
         self.dpu.index_vcf_file(variation)
         self.dpu.tabix_query(variation, chrom, start, end, sub_sample_vcf)
 
@@ -111,14 +104,10 @@ class dN_dS_ratio:
         variation = output_dir + '/sub_sample.vcf'
         gff_path = output_dir + '/sub_sample.gff'
         
-
         sequence =  self.pu.read_refseq(assembly_path)
         print(sequence)
-
         var_list = self.pu.read_vcf(variation, sequence)
         print(var_list)
-        
-
         var_file = os.path.join(output_dir, "variant_info.tsv")
 
         with open(var_file, 'w') as variant_tmp_file:
@@ -128,9 +117,7 @@ class dN_dS_ratio:
               var_temp.writerow(var_gene_list)
 
         gff_data = self.pu.read_gff_file(gff_path)
-
         codon_list = self.pu.get_triplets(sequence, gff_data)
-
         codon_result_file =  os.path.join(output_dir, "codon_results_temp.tsv")
         corrected_codon_result_file =  os.path.join(output_dir, "corrected_variant_info.tsv")
         
@@ -143,7 +130,6 @@ class dN_dS_ratio:
 
         merged_list = self.pu.merge_files(corrected_codon_result_file, codon_result_file, var_file)
         all_possible_codon = self.pu.get_all_possible_codon(merged_list)  # generating all possible codon
-
         self.pu.generate_statistics(corrected_codon_result_file, codon_result_file, all_possible_codon, output_dir)
 
         ############# html reporting ############################################################3 

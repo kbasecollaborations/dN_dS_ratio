@@ -39,8 +39,6 @@ class DnDs_Utils:
         total_Nsites = 0
         total_Ssites = 0
 
-
-
         with open(os.path.join(output_dir, "dnds_statistics.tsv"), "w") as stat_file:
             for cdn in codon_list:
                 print(cdn)
@@ -51,8 +49,11 @@ class DnDs_Utils:
 
             pn = total_Ndiffs / total_Nsites
             ps = total_Sdiffs / total_Ssites
-            #dn_ds_ratio = 0  # hardcoded for testing
-            dn_ds_ratio = pn / ps
+
+            if(ps == 0):
+                dn_ds_ratio = 0
+            else:
+                dn_ds_ratio = pn / ps
 
             stat_file.write("Ndiiffs:\t" + str(total_Ndiffs) + "\n")
             stat_file.write("Sdiiffs:\t" + str(total_Sdiffs)+ "\n")
@@ -75,7 +76,6 @@ class DnDs_Utils:
         '''
         coverage = coverage.replace("'", '"')
         coverage_dict = json.loads(coverage)
-
 
         print(coverage)
         num_A = int(coverage_dict['A'])
@@ -111,6 +111,7 @@ class DnDs_Utils:
 
         N = 0
         S = 0
+
         mutation_codon_data = self.getmutation_table()
 
         N1 = 0
@@ -197,7 +198,6 @@ class DnDs_Utils:
         '''
 
         codon = {}
-
         possible_cdn_list = []
         ref = key.split("-")[2]
         print(key)
@@ -373,7 +373,6 @@ class DnDs_Utils:
         all_annot = annot.split("&")
 
         i = 0
-
         for annot1 in all_annot:
             if annot1 not in ANNOT:
                 continue
@@ -397,9 +396,7 @@ class DnDs_Utils:
         # annotation field starts with ANN=
         # Each allele-effect in annotation field is separated by ,
         annotation_info = list()
-
         info = info_string.split(";")
-
         ann_string = None
         for j in info:
             if j.startswith("ANN="):
@@ -611,7 +608,6 @@ class DnDs_Utils:
         
         varlist = []
         with open(vcf_file, 'r') as fp:
-            #line = fp.readline()
             for line in fp:
                 print(line)
                 if not line.startswith("#"):
@@ -627,14 +623,12 @@ class DnDs_Utils:
                     var.append(rec[1])
 
                     annotation = rec[7]
-                    print("*******")
                     annot_list = self.parse_annotation(annotation)
                     print(annot_list)
                     cds_list = []
                     cds_pos_list = []
                     cds_num_list = []
                     mutation_type_list = []
-                    #allle_dict ={}
                     codon_start_pos_list = []
                     postion_in_codon_list = []
                     if(annot_list):
@@ -665,17 +659,10 @@ class DnDs_Utils:
                         var.append('-')
                         mutation_type_list.append('-')
 
-
-
-
-
                     print("*******")
                     var_field = filter(self.filter_ann, annotation.split("|"))
                     mut_filed = filter(self.filter_codon_change, annotation.split("|"))
 
-
-                    #exit(annotation.split("|"))
-                    #seq = self.read_refseq("sample.fa")
                     pos_in_codon = 0
                     field_num = 0
                     pos_field = 0
@@ -760,10 +747,7 @@ class DnDs_Utils:
                             merged_line = line + "\t" + pos_dict[var_pos]
                             var_rec[7] = codon
                             mfile.write('\t'.join(var_rec) + "\n")
-                            #merged_list.append(merged_line.split("\t"))
-                            #print(merged_line)
                         merged_list.append(var_rec)
-                    #print(var_pos)
         return  merged_list
 
     def generate_statistics(self, varinat_info_file, codon_info_file, all_possible_codon, output_dir):
@@ -803,7 +787,6 @@ class DnDs_Utils:
                     print(all_possible_codon[key])
 
                     all_codon = self.possible_codon(key, all_possible_codon[key])
-                    #print(all_codon)
                     Sites = self.get_Sites(all_codon)
                     Nsites = Sites['Nsites']
                     Ssites = Sites['Ssites']
