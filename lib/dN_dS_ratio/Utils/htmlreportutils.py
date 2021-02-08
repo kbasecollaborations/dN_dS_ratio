@@ -16,10 +16,12 @@ class htmlreportutils:
 
         output = "<html><head></head><body>"
         output += "<h2>Dn/Ds Report</h2>"
+        output += "<table>"
         with open(os.path.join(output_dir, "dnds_statistics.tsv"), 'r') as fp:
             for line in fp:
-               output += "<br> " + line + " </br>" 
-        output += "</body></html>"
+                (col1, col2) = line.split("\t")
+                output += "<tr><td>" + col1 + "</td><td>" + col2 + "</td></tr>"
+        output += "</table></body></html>"
         return output
 
     def create_html_report(self, callback_url, output_dir, workspace_name):

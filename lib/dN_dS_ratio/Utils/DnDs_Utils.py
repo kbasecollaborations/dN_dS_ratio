@@ -67,6 +67,7 @@ class DnDs_Utils:
 
     def get_all_possible_combination(self, n):
         ''' get all possible combination formula = nc2'''
+
         return n * (n - 1) / 2
 
     def get_Ndiffs(self, coverage):
@@ -74,6 +75,7 @@ class DnDs_Utils:
         :param coverage_dict: dictionary of coverage
         :return: Ndiffs or Sdiffs
         '''
+
         coverage = coverage.replace("'", '"')
         coverage_dict = json.loads(coverage)
 
@@ -292,7 +294,6 @@ class DnDs_Utils:
         :return:
         '''
 
-
         cdn_dict = {}
         for cdn_lst in codon_list:
             key = str(cdn_lst[0]) + "-" + str(cdn_lst[6]) + "-" + cdn_lst[7]
@@ -361,6 +362,7 @@ class DnDs_Utils:
         :param annot:
         :return:
         '''
+
         ANNOT = {
             "synonymous_variant": 1,
             "missense_variant": 1,
@@ -385,12 +387,12 @@ class DnDs_Utils:
             return None
 
     def parse_annotation(self, info_string):
-        """
+        ''''
         parses annotation string into a structure
         [gene_id, transcript_id,
         :param ann_string:
         :return:
-        """
+        '''
         #
         # Fields are delimited by ;
         # annotation field starts with ANN=
