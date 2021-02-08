@@ -36,7 +36,6 @@ class htmlreportutils:
         dfu = DataFileUtil(callback_url)
         report_name = 'kb_dnds_report_' + str(uuid.uuid4())
         report = KBaseReport(callback_url)
-        #index_file_path = "./venn_diagram.png"
         htmlstring = self.import_image("dn_ds_report", output_dir)
 
         try:

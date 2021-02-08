@@ -702,7 +702,11 @@ class DnDs_Utils:
         return varlist
 
     def read_refseq(self, fasta_file):
-        '''read fasta file'''
+        '''
+        reading fasta file
+        :param fasta_file:
+        :return:
+        '''
 
         seq = ''
         with open(fasta_file) as fp:
@@ -817,4 +821,4 @@ class DnDs_Utils:
                     pn_ps_lst.append([Nsites, Ssites, 0, 0])
 
             dn_ds_ratio = self.calculate_dn_ds_ratio(pn_ps_lst, output_dir)
-            print("dn/ds ratio = " + str(dn_ds_ratio))  # need to check with spreasheet
+            print("dn/ds ratio = " + str(dn_ds_ratio))  # need to check with spreadsheet
